@@ -1,0 +1,10 @@
+es_version: 8.12.0
+cluster_name: ml-research-cluster
+project_dir: "{{ playbook_dir }}/.."
+
+es_java_opts: "-Xms512m -Xmx512m" 
+
+es_nodes:
+  - { name: "es-node01", port: "9200" }
+  - { name: "es-node02", port: "9201" } 
+  - { name: "es-node03", port: "9202" }

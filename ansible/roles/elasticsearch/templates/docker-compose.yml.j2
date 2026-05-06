@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+{% for node in es_nodes %}
+  {{ node.name }}:
+    image: docker.elastic.co/elasticsearch/elasticsearch:{{ es_version }}
+    container_name: {{ node.name }}
+    environment:
+      - node.name={{ node.name }}
+      - cluster.name={{ cluster_name }}
+      - discovery.seed_hosts={{ es_nodes | map(attribute='name') | join(',') }}
+      - cluster.initial_master_nodes={{ es_nodes | map(attribute='name') | join(',') }}
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS={{ es_java_opts }}"
+      - xpack.security.enabled=false
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - {{ node.name }}-data:/usr/share/elasticsearch/data
+    ports:
+      - "{{ 9200 + loop.index0 }}:9200" 
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://localhost:9200/_cluster/health | grep -q '\"status\":\"green\"\\|\"status\":\"yellow\"'"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+{% endfor %}
+
+volumes:
+{% for node in es_nodes %}
+  {{ node.name }}-data:
+{% endfor %}

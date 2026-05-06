@@ -1,0 +1,5 @@
+- name: Deploy Elasticsearch Cluster
+  hosts: all
+  become: true  
+  roles:
+    - elasticsearch

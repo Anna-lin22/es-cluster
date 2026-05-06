@@ -1,0 +1,12 @@
+# Python 
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Ansible
+*.retry
+*.log
+
+# Docker 
+.env
