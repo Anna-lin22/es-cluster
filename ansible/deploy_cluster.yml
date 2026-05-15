@@ -1,5 +1,7 @@
 - name: Deploy Elasticsearch Cluster
   hosts: all
-  become: true  
+  become: true
+  vars_files:
+    - roles/elasticsearch/vars/secrets.yml  
   roles:
     - elasticsearch

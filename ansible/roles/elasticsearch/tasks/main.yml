@@ -1,3 +1,22 @@
+- name: Create certs directory
+  file:
+    path: "{{ project_dir }}/certs"
+    state: directory
+    mode: '0777'
+
+- name: Check if certificates exist
+  stat:
+    path: "{{ project_dir }}/certs/elastic-stack-ca.p12"
+  register: ca_stat
+
+- name: Generate certificates (using temp container)
+  command: >
+    docker run --rm -v {{ project_dir }}/certs:/certs 
+    docker.elastic.co/elasticsearch/elasticsearch:{{ es_version }} 
+    bash -c "bin/elasticsearch-certutil ca --out /certs/elastic-stack-ca.p12 --pass '' && 
+    bin/elasticsearch-certutil cert --name instances --ca /certs/elastic-stack-ca.p12 --ca-pass '' --out /certs/instances.p12 --pass ''"
+  when: not ca_stat.stat.exists
+
 - name: Ensure project directory exists
   file:
     path: "{{ project_dir }}"
@@ -25,7 +44,12 @@
 
 - name: Wait for Elasticsearch API to be ready
   uri:
-    url: "http://localhost:9200/_cluster/health"
+    url: "https://localhost:9200/_cluster/health"
+    method: GET
+    user: elastic
+    password: "{{ es_password }}"
+    force_basic_auth: yes
+    validate_certs: false  
     status_code: 200
   register: result
   until: >

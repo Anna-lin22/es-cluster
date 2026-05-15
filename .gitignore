@@ -1,12 +1,32 @@
-# Python 
+#Python 
 __pycache__/
 *.py[cod]
+*$py.class
 .venv/
 venv/
+ENV/
+.env
 
-# Ansible
+#research
+ml_research/results/
+
+#Ansible
 *.retry
 *.log
+ansible/roles/elasticsearch/vars/secrets.yml
 
-# Docker 
+#Docker
 .env
+docker-compose.yml
+es-node*-data/
+
+#Security
+certs/
+*.p12
+*.pem
+*.key
+*.crt
+
+#OS specific
+.DS_Store
+.thumbs.db

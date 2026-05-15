@@ -2,6 +2,7 @@ es_version: 8.12.0
 cluster_name: ml-research-cluster
 project_dir: "{{ playbook_dir }}/.."
 
+es_security_enabled: "true"
 es_java_opts: "-Xms512m -Xmx512m" 
 
 es_nodes:
