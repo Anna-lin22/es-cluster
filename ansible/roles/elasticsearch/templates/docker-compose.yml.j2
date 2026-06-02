@@ -45,6 +45,54 @@ services:
 
 {% endfor %}
 
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:{{ es_version }}
+    container_name: kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=https://es-node01:9200
+      - ELASTICSEARCH_USERNAME=kibana_system
+      - ELASTICSEARCH_PASSWORD={{ es_password }}
+      - ELASTICSEARCH_SSL_VERIFICATIONMODE=none
+      - SERVER_NAME=kibana
+    volumes:
+      - {{ project_dir }}/certs:/usr/share/kibana/config/certs
+    ports:
+      - "5601:5601"
+    depends_on:
+      es-node01:
+        condition: service_healthy
+
+  metricbeat:
+    image: docker.elastic.co/beats/metricbeat:{{ es_version }}
+    container_name: metricbeat
+    user: root
+    environment:
+      - ELASTICSEARCH_HOSTS=https://es-node01:9200
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD={{ es_password }}
+    volumes:
+      - {{ project_dir }}/certs:/usr/share/metricbeat/certs
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    command: >
+      metricbeat -e
+      -E output.elasticsearch.hosts=["https://es-node01:9200"]
+      -E output.elasticsearch.username=elastic
+      -E output.elasticsearch.password={{ es_password }}
+      -E output.elasticsearch.ssl.verification_mode=none
+      -E setup.kibana.host=kibana:5601
+      -E setup.kibana.username=elastic
+      -E setup.kibana.password={{ es_password }}
+      -E metricbeat.modules.0.module=elasticsearch
+      -E metricbeat.modules.0.hosts=["https://es-node01:9200","https://es-node02:9200","https://es-node03:9200"]
+      -E metricbeat.modules.0.ssl.verification_mode=none
+      -E metricbeat.modules.0.username=elastic
+      -E metricbeat.modules.0.password={{ es_password }}
+      -E metricbeat.modules.0.xpack.enabled=true
+    depends_on:
+      es-node01:
+        condition: service_healthy
+
 volumes:
 {% for node in es_nodes %}
   {{ node.name }}-data:

@@ -27,6 +27,8 @@ project/
 - Docker + Docker Compose v2
 - Ansible with `community.docker` collection
 - ansible-vault (for secrets)
+- Kibana for visualization
+- Metricbeat for cluster monitoring
 
 Install the required Ansible collection:
 ```bash
@@ -51,6 +53,7 @@ Cluster parameters are defined in `ansible/roles/elasticsearch/vars/main.yml`:
 | es-node01 | 9200      |
 | es-node02 | 9201      |
 | es-node03 | 9202      |
+| Kibana    | 5601      |
 
 ## Secrets
 
@@ -75,6 +78,7 @@ The playbook will:
 4. Render `docker-compose.yml` from the Jinja2 template
 5. Start the cluster with `docker compose up`
 6. Wait for the cluster to reach `green` or `yellow` status
+6. Start Kibana and Metricbeat
 
 ## Verify the Cluster
 
