@@ -14,10 +14,14 @@ ml_research/results/
 *.retry
 *.log
 ansible/roles/elasticsearch/vars/secrets.yml
+.vault_pass
 
 #Docker
 .env
-docker-compose.yml
+docker-compose*.yml
+kibana.yml
+metricbeat.yml
+filebeat.yml
 es-node*-data/
 
 #Security
@@ -30,3 +34,4 @@ certs/
 #OS specific
 .DS_Store
 .thumbs.db
+

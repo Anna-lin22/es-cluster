@@ -1,0 +1,12 @@
+services:
+  metricbeat:
+    image: docker.elastic.co/beats/metricbeat:{{ es_version }}
+    container_name: metricbeat
+    user: root
+    volumes:
+      - ./certs:/usr/share/metricbeat/certs
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./metricbeat.yml:/usr/share/metricbeat/metricbeat.yml:ro
+    depends_on:
+      es-node01:
+        condition: service_healthy

@@ -1,0 +1,28 @@
+filebeat.modules:
+  - module: system
+    auth:
+      enabled: true
+      var.paths: ["/var/log/test.log"]
+    syslog:
+      enabled: false
+
+output.elasticsearch:
+  hosts:
+    - "https://es-node01:9200"
+    - "https://es-node02:9200"
+    - "https://es-node03:9200"
+  username: "elastic"
+  password: "{{ es_password }}"
+  ssl.verification_mode: none
+
+setup.kibana:
+  host: "kibana:5601"
+  username: "elastic"
+  password: "{{ es_password }}"
+
+setup.dashboards.enabled: true
+
+processors:
+  - add_host_metadata:
+      when.not.contains.tags: forwarded
+  - add_docker_metadata: ~

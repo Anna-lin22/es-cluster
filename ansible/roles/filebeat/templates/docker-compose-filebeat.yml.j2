@@ -1,0 +1,15 @@
+services:
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:{{ es_version }}
+    container_name: filebeat
+    user: root
+    volumes:
+      - ./certs:/usr/share/filebeat/certs
+      - /var/log:/var/log:ro
+      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    depends_on:
+      es-node01:
+        condition: service_healthy
+      kibana:
+        condition: service_healthy

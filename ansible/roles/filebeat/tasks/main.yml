@@ -1,0 +1,9 @@
+- name: Render filebeat.yml
+  template:
+    src: filebeat.yml.j2
+    dest: "{{ project_dir }}/filebeat.yml"
+
+- name: Render docker-compose-filebeat.yml
+  template:
+    src: docker-compose-filebeat.yml.j2
+    dest: "{{ project_dir }}/docker-compose-filebeat.yml"

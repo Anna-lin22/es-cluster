@@ -1,0 +1,9 @@
+- name: Render kibana.yml
+  template:
+    src: kibana.yml.j2
+    dest: "{{ project_dir }}/kibana.yml"
+
+- name: Render docker-compose-kibana.yml
+  template:
+    src: docker-compose-kibana.yml.j2
+    dest: "{{ project_dir }}/docker-compose-kibana.yml"

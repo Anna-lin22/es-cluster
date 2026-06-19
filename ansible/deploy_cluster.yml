@@ -1,7 +1,29 @@
-- name: Deploy Elasticsearch Cluster
+- name: Deploy Elastic Stack
   hosts: all
   become: true
   vars_files:
-    - roles/elasticsearch/vars/secrets.yml  
+    - roles/elasticsearch/vars/secrets.yml
   roles:
     - elasticsearch
+    - kibana
+    - metricbeat
+    - filebeat
+
+- name: Start full stack
+  hosts: all
+  become: true
+  vars:
+    project_dir: "{{ playbook_dir }}/.."
+  vars_files:
+    - roles/elasticsearch/vars/secrets.yml
+  tasks:
+    - name: Start all services
+      community.docker.docker_compose_v2:
+        project_src: "{{ project_dir }}"
+        files:
+          - docker-compose-es.yml
+          - docker-compose-kibana.yml
+          - docker-compose-metricbeat.yml
+          - docker-compose-filebeat.yml
+        state: present
+        wait: yes

@@ -1,0 +1,9 @@
+- name: Render metricbeat.yml
+  template:
+    src: metricbeat.yml.j2
+    dest: "{{ project_dir }}/metricbeat.yml"
+
+- name: Render docker-compose-metricbeat.yml
+  template:
+    src: docker-compose-metricbeat.yml.j2
+    dest: "{{ project_dir }}/docker-compose-metricbeat.yml"
